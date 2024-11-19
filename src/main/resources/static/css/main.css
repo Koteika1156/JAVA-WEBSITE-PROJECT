@@ -1,0 +1,26 @@
+@import "header.css";
+@import "footer.css";
+@import "content.css";
+* {
+	margin: 0;
+	padding: 0;
+	font-family: 'Inter', sans-serif;
+}
+
+a.text:active, a.text:hover, a {
+	text-decoration: none;
+}
+
+body {
+	min-height: 100%;
+}
+
+div.main {
+	display: flex;
+	flex-direction: column;
+	min-height: 100%;
+}
+
+html{
+  height: 100%;
+}

@@ -1,0 +1,30 @@
+div.header {
+	display: flex;
+	height: 60px;
+	background-color: #000;
+	padding-left: 12%;
+	padding-right: 12%;
+	justify-content: space-between;
+	align-items:center;
+	color: #FFF;
+	font-size: 20px;
+} 
+
+div.logo {
+	display: flex;
+	align-items:center;
+}
+
+div.text_logo {
+	margin-left: 10px;
+}
+
+div.menu {
+	justify-content: space-between;
+	width: 530px;
+	display: flex;
+}
+
+div.menu a {
+	color: #FFF;
+}
