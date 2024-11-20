@@ -2,11 +2,13 @@ package com.example.demo.models.response.clinic;
 
 import com.example.demo.models.entity.ClinicEntity;
 import com.example.demo.models.interfaces.ModelWithMessage;
+import com.example.demo.models.response.doctor.DoctorResponse;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,6 +24,8 @@ public class ClinicResponse extends ModelWithMessage {
     private LocalTime openTime;
     private LocalTime closeTime;
 
+    private List<DoctorResponse> doctors;
+
     public static ClinicResponse toResponse(ClinicEntity clinic) {
         if (clinic == null) {
             return null;
@@ -36,6 +40,11 @@ public class ClinicResponse extends ModelWithMessage {
                 .email(clinic.getEmail())
                 .openTime(clinic.getOpenTime())
                 .closeTime(clinic.getCloseTime())
+                .doctors(
+                        clinic.getDoctors().stream()
+                                .map(DoctorResponse::toDoctorResponse)
+                                .toList()
+                )
                 .build();
     }
 }

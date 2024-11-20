@@ -38,6 +38,10 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                        /*.requestMatchers("/api/v1/clinic/update", "/api/v1/clinic/add", "/api/v1/clinic/delete")
+                        .hasRole("ADMIN")*/
+                        /*.requestMatchers("/api/v1/doctor/update", "/api/v1/doctor/add", "/api/v1/doctor/delete")
+                                .hasRole("ADMIN")*/
                         .requestMatchers("/api/v1/**").authenticated()
                         .anyRequest().permitAll()
                 )

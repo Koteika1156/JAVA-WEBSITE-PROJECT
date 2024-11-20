@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClinicServiceImpl implements ClinicService {
@@ -23,6 +24,10 @@ public class ClinicServiceImpl implements ClinicService {
 
     ClinicServiceImpl(ClinicRepository clinicRepository) {
         this.clinicRepository = clinicRepository;
+    }
+
+    public Optional<ClinicEntity> getClinicById(String id) {
+        return clinicRepository.findById(id);
     }
 
     @Override

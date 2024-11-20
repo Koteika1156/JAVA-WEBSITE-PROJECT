@@ -1,26 +1,25 @@
 package com.example.demo.models.entity;
 
-import com.example.demo.models.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
 @Getter
 @Setter
-@Table(name = "users")
-public class UserEntity {
+@Entity
+@Table(name = "doctors")
+public class DoctorEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(unique = true, nullable = false)
-    private String username;
-
-    private String password;
     private String firstName;
     private String lastName;
-    private String number;
-    private UserRole role;
+
+    private String specialization;
+
+    @ManyToOne
+    @JoinColumn(name="clinic_id")
+    private ClinicEntity clinic;
 }
