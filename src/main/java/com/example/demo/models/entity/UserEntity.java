@@ -1,7 +1,7 @@
 package com.example.demo.models.entity;
 
 
-import com.example.demo.models.Roles;
+import com.example.demo.models.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,5 +22,5 @@ public class UserEntity {
     private String firstName;
     private String lastName;
     private String number;
-    private Roles role;
+    private UserRole role;
 }

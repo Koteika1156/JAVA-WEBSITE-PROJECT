@@ -1,6 +1,6 @@
 package com.example.demo.util;
 
-import com.example.demo.models.Roles;
+import com.example.demo.models.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -33,7 +33,7 @@ public class TokenUtil {
     private static final String IAT_KEY = "iat";
     private static final String ROLE_KEY = "role";
 
-    public String generateAccessToken(String userId, Roles role) {
+    public String generateAccessToken(String userId, UserRole role) {
         Instant now = Instant.now();
         return Jwts.builder()
                 .claim(SUB_KEY, userId)
@@ -62,10 +62,10 @@ public class TokenUtil {
                 .getPayload();
     }
 
-    public boolean isTokenValid(String token, String userId) {
+    public boolean isTokenValid(String token) {
         try {
             Claims claims = parseToken(token);
-            return userId.equals(claims.get(SUB_KEY)) && !isTokenExpired(claims);
+            return !isTokenExpired(claims);
         } catch (Exception e) {
             return false;
         }
@@ -78,6 +78,11 @@ public class TokenUtil {
 
     public String getUserId(String token) {
         return getAllClaims(token).getSubject();
+    }
+
+    public UserRole getUserRole(String token) {
+        String roleString = (String) getAllClaims(token).get(ROLE_KEY);
+        return UserRole.fromValue(roleString);
     }
 
     private Claims getAllClaims(String token) {

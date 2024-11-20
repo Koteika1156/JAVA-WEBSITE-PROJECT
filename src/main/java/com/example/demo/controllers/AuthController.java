@@ -1,6 +1,10 @@
 package com.example.demo.controllers;
 
+import com.example.demo.models.request.TokenRefreshRequest;
+import com.example.demo.models.request.UserLoginRequest;
 import com.example.demo.models.request.UserRegistrationRequest;
+import com.example.demo.models.response.TokenRefreshResponse;
+import com.example.demo.models.response.UserLoginResponse;
 import com.example.demo.models.response.UserRegistrationResponse;
 import com.example.demo.services.AuthService;
 import org.springframework.http.ResponseEntity;
@@ -8,8 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/auth")
@@ -22,11 +24,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ModelAndView login(
-            @RequestParam("username") String username,
-            @RequestParam("password") String password
-    ) {
-        return null;
+    public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
+        return authService.login(userLoginRequest);
     }
 
     @PostMapping("/registration")
@@ -34,4 +33,8 @@ public class AuthController {
         return authService.registration(registrationRequest);
     }
 
+    @PostMapping("/refreshToken")
+    public ResponseEntity<TokenRefreshResponse> refreshToken(@RequestBody TokenRefreshRequest tokenRefreshRequest) {
+        return authService.refreshToken(tokenRefreshRequest);
+    }
 }
