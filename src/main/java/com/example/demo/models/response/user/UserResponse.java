@@ -1,4 +1,4 @@
-package com.example.demo.models.response;
+package com.example.demo.models.response.user;
 
 import com.example.demo.models.UserRole;
 import com.example.demo.models.entity.UserEntity;

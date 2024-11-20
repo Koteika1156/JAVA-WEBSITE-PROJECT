@@ -3,11 +3,11 @@ package com.example.demo.services.impl;
 import com.example.demo.exception.UserNotFound;
 import com.example.demo.models.dto.UserDTO;
 import com.example.demo.models.request.TokenRefreshRequest;
-import com.example.demo.models.request.UserLoginRequest;
-import com.example.demo.models.request.UserRegistrationRequest;
+import com.example.demo.models.request.user.UserLoginRequest;
+import com.example.demo.models.request.user.UserRegistrationRequest;
 import com.example.demo.models.response.TokenRefreshResponse;
-import com.example.demo.models.response.UserLoginResponse;
-import com.example.demo.models.response.UserRegistrationResponse;
+import com.example.demo.models.response.user.UserLoginResponse;
+import com.example.demo.models.response.user.UserRegistrationResponse;
 import com.example.demo.services.AuthService;
 import com.example.demo.services.UserService;
 import com.example.demo.util.TokenUtil;
@@ -46,6 +46,12 @@ public class AuthServiceImpl implements AuthService {
     @Transactional(rollbackOn = Exception.class)
     public ResponseEntity<UserLoginResponse> login(UserLoginRequest userLoginRequest) {
         try {
+
+            Optional<UserDTO> userDTO = userService.getUserByUsername(userLoginRequest.getUsername());
+
+            if (userDTO.isEmpty()) {
+                throw new UserNotFound("Пользователь не был найден!");
+            }
 
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -211,7 +217,7 @@ public class AuthServiceImpl implements AuthService {
             String accessToken = tokenUtil.generateAccessToken(user.getId(), user.getRole());
 
             return ResponseEntity
-                    .badRequest()
+                    .ok()
                     .body(
                             TokenRefreshResponse
                                     .builder()
