@@ -23,6 +23,10 @@ public class UserRegistrationRequest {
     private UserRole role;
 
     public static UserEntity toEntity(UserRegistrationRequest userRegistrationRequest) {
+        if (userRegistrationRequest == null) {
+            return null;
+        }
+
         UserEntity userEntity = new UserEntity();
 
         userEntity.setFirstName(userRegistrationRequest.getFirstName());

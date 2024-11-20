@@ -7,7 +7,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 @SuperBuilder
-public abstract class ResultWithMessage {
-    private String message;
+public abstract class ResultWithMessage extends ModelWithMessage {
     private boolean result;
 }

@@ -7,7 +7,6 @@ import com.example.demo.models.response.user.UserDeleteResponse;
 import com.example.demo.models.response.user.UserResponse;
 import com.example.demo.models.response.user.UserUpdateResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.Optional;
 

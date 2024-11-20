@@ -77,36 +77,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<UserDeleteResponse> deleteUser() {
-        try {
-            String id = SecurityContextHolder.getContext().getAuthentication().getName();
-
-            userRepository.deleteById(id);
-
-            return ResponseEntity
-                    .ok()
-                    .body(
-                            UserDeleteResponse
-                                    .builder()
-                                    .result(true)
-                                    .message("Пользователь успешно удален")
-                                    .build()
-                    );
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity
-                    .badRequest()
-                    .body(
-                            UserDeleteResponse
-                                    .builder()
-                                    .result(false)
-                                    .message("Ошибка при удалении пользователя")
-                                    .build()
-                    );
-        }
-    }
-
-    @Override
     public ResponseEntity<UserUpdateResponse> updateUser(UserUpdateRequest userUpdateRequest) {
         try {
             if (userUpdateRequest.getNewPassword() != null && userUpdateRequest.getNewPasswordConfirm() != null &&
@@ -161,6 +131,36 @@ public class UserServiceImpl implements UserService {
                                     .builder()
                                     .result(false)
                                     .message("Ошибка при обновлении пользователя")
+                                    .build()
+                    );
+        }
+    }
+
+    @Override
+    public ResponseEntity<UserDeleteResponse> deleteUser() {
+        try {
+            String id = SecurityContextHolder.getContext().getAuthentication().getName();
+
+            userRepository.deleteById(id);
+
+            return ResponseEntity
+                    .ok()
+                    .body(
+                            UserDeleteResponse
+                                    .builder()
+                                    .result(true)
+                                    .message("Пользователь успешно удален")
+                                    .build()
+                    );
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity
+                    .badRequest()
+                    .body(
+                            UserDeleteResponse
+                                    .builder()
+                                    .result(false)
+                                    .message("Ошибка при удалении пользователя")
                                     .build()
                     );
         }

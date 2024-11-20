@@ -1,7 +1,6 @@
 package com.example.demo.filter;
 
 import com.example.demo.models.UserRole;
-import com.example.demo.services.impl.AuthServiceImpl;
 import com.example.demo.util.TokenUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
