@@ -7,7 +7,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 @SuperBuilder
-public abstract class TokenCredentials extends ResultWithMessage {
-    protected String accessToken;
-    protected String refreshToken;
+public class ModelWithMessage {
+    private String message;
 }

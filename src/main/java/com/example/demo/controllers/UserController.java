@@ -4,10 +4,9 @@ import com.example.demo.models.request.user.UserUpdateRequest;
 import com.example.demo.models.response.user.UserResponse;
 import com.example.demo.services.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/api/v1/user")
 public class UserController {
     private final UserService userService;

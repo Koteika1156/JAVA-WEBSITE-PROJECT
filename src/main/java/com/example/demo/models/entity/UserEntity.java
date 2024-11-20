@@ -1,6 +1,5 @@
 package com.example.demo.models.entity;
 
-
 import com.example.demo.models.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
