@@ -1,7 +1,7 @@
 package com.example.demo.models.request;
 
 
-import com.example.demo.models.Roles;
+import com.example.demo.models.UserRole;
 import com.example.demo.models.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +20,7 @@ public class UserRegistrationRequest {
     private String username;
     private String password;
     private String confirmPassword;
-    private Roles role;
+    private UserRole role;
 
     public static UserEntity toEntity(UserRegistrationRequest userRegistrationRequest) {
         UserEntity userEntity = new UserEntity();
@@ -32,8 +32,8 @@ public class UserRegistrationRequest {
         userEntity.setPassword(userRegistrationRequest.getPassword());
 
         // Блочим челов которые хотят себе роль админа
-        if (userRegistrationRequest.role == Roles.ADMIN) {
-            userEntity.setRole(Roles.USER);
+        if (userRegistrationRequest.role == UserRole.ADMIN) {
+            userEntity.setRole(UserRole.USER);
         }
         userEntity.setRole(userRegistrationRequest.getRole());
 

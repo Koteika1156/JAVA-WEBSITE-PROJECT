@@ -3,14 +3,13 @@ package com.example.demo.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum Roles {
+public enum UserRole {
     USER("USER"),
-    DOCTOR("DOCTOR"),
     ADMIN("ADMIN");
 
     private final String value;
 
-    Roles(String value) {
+    UserRole(String value) {
         this.value = value;
     }
 
@@ -20,12 +19,17 @@ public enum Roles {
     }
 
     @JsonCreator
-    public static Roles fromValue(String value) {
-        for (Roles role : Roles.values()) {
+    public static UserRole fromValue(String value) {
+        for (UserRole role : UserRole.values()) {
             if (role.value.equalsIgnoreCase(value)) {
                 return role;
             }
         }
         throw new IllegalArgumentException("Unknown role: " + value);
+    }
+
+    @Override
+    public String toString() {
+        return value;
     }
 }
