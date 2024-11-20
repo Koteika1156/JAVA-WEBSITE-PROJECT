@@ -18,8 +18,8 @@ public class ScheduleEntity {
     private String hospitalId;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private String startDate;
+    private String startTime;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private String endDate;
+    private String endTime;
 }

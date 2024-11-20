@@ -1,4 +1,4 @@
-package com.example.demo.models.request;
+package com.example.demo.models.request.schedule;
 
 import com.example.demo.models.entity.ScheduleEntity;
 import lombok.AllArgsConstructor;
@@ -14,8 +14,8 @@ public class ScheduleRecordRequest {
     private String doctorId;
     private String userId;
     private String hospitalId;
-    private String startDate;
-    private String endDate;
+    private String startTime;
+    private String endTime;
 
     public static ScheduleEntity toEntity(ScheduleRecordRequest scheduleRecordRequest) {
         ScheduleEntity scheduleEntity = new ScheduleEntity();
@@ -23,8 +23,8 @@ public class ScheduleRecordRequest {
         scheduleEntity.setDoctorId(scheduleRecordRequest.getDoctorId());
         scheduleEntity.setUserId(scheduleRecordRequest.getUserId());
         scheduleEntity.setHospitalId(scheduleRecordRequest.getHospitalId());
-        scheduleEntity.setStartDate(scheduleRecordRequest.getStartDate());
-        scheduleEntity.setEndDate(scheduleRecordRequest.getEndDate());
+        scheduleEntity.setStartTime(scheduleRecordRequest.getStartTime());
+        scheduleEntity.setEndTime(scheduleRecordRequest.getEndTime());
         return scheduleEntity;
     }
 }

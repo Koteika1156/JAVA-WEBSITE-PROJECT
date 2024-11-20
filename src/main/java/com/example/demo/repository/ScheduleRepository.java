@@ -8,6 +8,6 @@ import java.util.Optional;
 
 
 @Repository
-public interface ScheduleRepository extends CrudRepository<ScheduleEntity, Long> {
-    Optional<ScheduleEntity> findByStartDateAndDoctorId(String startDate, String doctorId);
+public interface ScheduleRepository extends CrudRepository<ScheduleEntity, String> {
+    Optional<ScheduleEntity> findByStartTimeAndDoctorId(String startTime, String doctorId);
 }
