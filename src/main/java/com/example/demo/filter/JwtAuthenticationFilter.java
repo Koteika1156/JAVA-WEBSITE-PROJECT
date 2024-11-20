@@ -47,10 +47,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
-        logger.info("JWT Token: {}", jwt);
-        logger.info("User ID: " + userId);
-        logger.info("Role: " + role);
-
         if (userId != null && role != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                     userId,

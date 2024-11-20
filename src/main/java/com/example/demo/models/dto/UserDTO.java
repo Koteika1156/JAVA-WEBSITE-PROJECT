@@ -19,7 +19,9 @@ public class UserDTO {
     private UserRole role;
 
     public static UserDTO toDTO(UserEntity userEntity) {
-        if (userEntity == null) return null;
+        if (userEntity == null) {
+            return null;
+        }
 
         UserDTO userDTO = new UserDTO();
         userDTO.setId(userEntity.getId());
