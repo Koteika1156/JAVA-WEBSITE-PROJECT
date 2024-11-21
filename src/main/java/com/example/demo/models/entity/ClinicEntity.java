@@ -1,17 +1,16 @@
 package com.example.demo.models.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@Table(name = "clinics")
 public class ClinicEntity {
 
     @Id
@@ -25,4 +24,7 @@ public class ClinicEntity {
 
     private LocalTime openTime;
     private LocalTime closeTime;
+
+    @OneToMany(mappedBy="clinic")
+    private List<DoctorEntity> doctors;
 }

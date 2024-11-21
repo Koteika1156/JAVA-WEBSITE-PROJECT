@@ -207,13 +207,14 @@ public class AuthServiceImpl implements AuthService {
                         );
             }
 
-            UserDTO user = userService.getUserById(
-                    tokenUtil.getUserId(
-                            tokenRefreshRequest.getRefreshToken()
-                    )
-            ).orElseThrow(
-                    () -> new UserNotFound("Пользователь не был найден")
-            );
+            UserDTO user = userService
+                    .getUserById(
+                            tokenUtil.getUserId(
+                                    tokenRefreshRequest.getRefreshToken()
+                            )
+                    ).orElseThrow(
+                            () -> new UserNotFound("Пользователь не был найден")
+                    );
             String accessToken = tokenUtil.generateAccessToken(user.getId(), user.getRole());
 
             return ResponseEntity
