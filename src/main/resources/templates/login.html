@@ -18,7 +18,7 @@
 			<div><p><a href="/">Новости</a></p></div>
 			<div><p><a href="/">Пациентам</a></p></div>
 			<div><p><a href="/">О клинике</a></p></div>
-			<div><p><a href="/login">Личный кабинет</a></p></div>
+			<div><p><a href="/login" id="loginLink">Личный кабинет</a></p></div>
 			</div>
 		</div>
 			<div class="content">
@@ -34,8 +34,9 @@
 						<input type="password" id="password" name="password" />
 					</div>
 					<div class="loginField">
-						<button type="submit">Войти</button>
+						<button type="button" id="loginButton">Войти</button>
 					</div>
+						<div class="loginField"><p>Нет аккаунта?</p><p><a href="/register">Зарегистрироваться.</a></p></div>
 					<div th:if="${error}" th:text="${error}" class="error-message"></div>
 					</div>
 				</form>

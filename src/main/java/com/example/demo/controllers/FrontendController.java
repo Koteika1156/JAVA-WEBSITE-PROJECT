@@ -1,9 +1,9 @@
 package com.example.demo.controllers;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 public class FrontendController {
     @GetMapping("/")
     public String indexPage() {
@@ -14,4 +14,20 @@ public class FrontendController {
     public String loginPage() {
         return "login";
     }
+
+    @GetMapping("/register")
+    public String registerPage() {
+        return "register";
+    }
+
+    @GetMapping("/profile")
+    public String profilePage() {
+        return "profile";
+    }
+
+    @GetMapping("/newRecord")
+    public String newRecordPage() {
+        return "newrecord";
+    }
+
 }
