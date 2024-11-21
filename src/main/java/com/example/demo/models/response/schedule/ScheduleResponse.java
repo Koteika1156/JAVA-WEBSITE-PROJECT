@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @SuperBuilder
@@ -14,8 +16,8 @@ public class ScheduleResponse extends ModelWithMessage {
     private String doctorId;
     private String userId;
     private String hospitalId;
-    private String startTime;
-    private String endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
     public static ScheduleResponse toResponse(ScheduleEntity schedule) {
         if (schedule == null) {

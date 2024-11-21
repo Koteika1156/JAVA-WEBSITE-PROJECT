@@ -22,6 +22,24 @@
         </div>
     </div>
     <div class="content">
+        <form id="recordForm">
+            <label for="clinic">Клиника:</label>
+            <select id="clinic" name="clinic" required>
+            <option value="">--Выберите клинику--</option></select>
+
+            <label for="doctor">Врач:</label>
+            <select id="doctor" name="doctor" required>
+                <option value="">--Выберите доктора--</option></select>
+
+            <label for="startTime">Начало приема:</label>
+            <input type="datetime-local" id="startTime" name="startTime" required>
+
+            <label for="endTime">Конец приема:</label>
+            <input type="datetime-local" id="endTime" name="endTime" required>
+
+            <button type="button" onclick="submitRecord()">Отправить</button>
+        </form>
+
     </div>
 
     <div class="footer">

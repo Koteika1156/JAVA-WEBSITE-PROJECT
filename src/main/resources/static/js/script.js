@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 const data = await response.json();
 
                 if (data.result === true && data.accessToken) {
+                    localStorage.setItem('userId', data.userId)
                     localStorage.setItem('accessToken', data.accessToken);
                     localStorage.setItem('refreshToken', data.refreshToken);
                     console.log('Login successful');
@@ -112,7 +113,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                         </div>
             `;
         } catch (error) {
-            refreshAccessToken();
             console.error('There has been a problem with your fetch operation:', error);
             userProfileDiv.innerHTML = `<p>Ошибка загрузки данных профиля.</p>`;
         }
@@ -151,7 +151,6 @@ async function showRecordsModal() {
             const headerRow = document.createElement('tr');
             const headers = ['Doctor ID', 'Hospital ID', 'Start Time', 'End Time'];
 
-            // Добавляем заголовки столбцов
             headers.forEach(headerText => {
                 const header = document.createElement('th');
                 header.textContent = headerText;
@@ -161,9 +160,23 @@ async function showRecordsModal() {
             thead.appendChild(headerRow);
             table.appendChild(thead);
 
-            // Создаем тело таблицы
             const tbody = document.createElement('tbody');
             tbody.id = "userTableBody"
+
+            for (let schedule of data.schedules) {
+                    const doctorName = await fetchDoctorName(schedule.doctorId);
+                    const clinicName = await fetchHospitalName(schedule.hospitalId);
+                    if (doctorName) {
+                        schedule.doctorId = doctorName;
+                    } else {
+                        console.error(`Failed to fetch doctor name for doctorId: ${schedule.doctorId}`);
+                    }
+                    if (clinicName) {
+                        schedule.hospitalId = clinicName;
+                    } else {
+                        console.error(`Failed to fetch clinic name for clinicId: ${schedule.doctorId}`);
+                    }
+            }
             data.schedules.forEach(record => {
                 const row = document.createElement('tr');
 
@@ -209,11 +222,6 @@ async function showRecordsModal() {
                         const startTimeInputValue = startTimeInput.value;
                         const endTimeInputValue = endTimeInput.value;
 
-                        if (new Date() !== "" && new Date(endTimeInputValue) !== "") {
-                            alert('Время не может быть пустым.');
-                            return;
-                        }
-
                         if (new Date(startTimeInputValue) >= new Date(endTimeInputValue)) {
                             alert('Время начала должно быть раньше времени окончания.');
                             return;
@@ -225,9 +233,9 @@ async function showRecordsModal() {
                         }
 
                         const updateData = {
-                            id: recordIdCell.textContent, // ID записи
-                            newStartTime: startTimeInputValue, // Новое время начала
-                            newEndTime: endTimeInputValue // Новое время окончания
+                            id: recordIdCell.textContent,
+                            newStartTime: startTimeInputValue,
+                            newEndTime: endTimeInputValue
                         };
 
                         try {
@@ -274,7 +282,7 @@ async function showRecordsModal() {
                 row.appendChild(editButton);
 
                 const deleteButton = createButton('fas fa-trash-alt', async () => {
-                    const recordId = recordIdCell.textContent; // Получаем ID записи из скрытой ячейки
+                    const recordId = recordIdCell.textContent;
 
                     try {
                         const response = await fetch(`/api/v1/record/delete?recordId=${encodeURIComponent(recordId)}`, {
@@ -292,7 +300,7 @@ async function showRecordsModal() {
                         if (data.result !== true) {
                             alert('Не удалось удалить запись.');
                         } else {
-                            row.remove(); // Удаляем строку из таблицы
+                            row.remove();
                         }
                     } catch (error) {
                         console.error('Ошибка при удалении записи:', error);
@@ -314,55 +322,65 @@ async function showRecordsModal() {
     }
 }
 
-function closeRecordsModal() {
-    document.getElementById('recordsModal').style.display = 'none';
-}
+async function fetchDoctorName(doctorId) {
 
-async function refreshAccessToken() {
+    const accessToken = localStorage.getItem('accessToken');
+
     try {
-        const refreshToken = localStorage.getItem('refreshToken');
-        if (!refreshToken) {
-            throw new Error('No refresh token available');
-        }
-        const apiUrl = '/auth/refreshToken';
-        const requestData = {
-            refreshToken: refreshToken
-        };
-        const response = await fetch(apiUrl, {
-            method: 'POST',
+        const response = await fetch(`/api/v1/doctor/getDoctor?id=${encodeURIComponent(doctorId)}`, {
+            method: 'GET',
             headers: {
+                'Authorization': 'Bearer ' + accessToken,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(requestData)
         });
         if (!response.ok) {
-            throw new Error('Network response was not ok: ' + response.statusText);
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        if (data.accessToken) {
-            localStorage.setItem('accessToken', data.accessToken);
-            console.log('Login successful');
-        } else {
-            console.error('Login failed');
-        }
+        return `${data.firstName} ${data.lastName} (${data.specialization})`;
     } catch (error) {
-        console.error('Error refreshing token:', error);
+        console.error('Error fetching doctor information:', error);
+        return null;
     }
+}
+
+async function fetchHospitalName(clinicId) {
+
+    const accessToken = localStorage.getItem('accessToken');
+
+    try {
+        const response = await fetch(`/api/v1/clinic/getClinic?clinicId=${encodeURIComponent(clinicId)}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + accessToken,
+                'Content-Type': 'application/json'
+            },
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return `${data.name} (${data.address})`;
+    } catch (error) {
+        console.error('Error fetching doctor information:', error);
+        return null;
+    }
+}
+
+function closeRecordsModal() {
+    document.getElementById('recordsModal').style.display = 'none';
 }
 
 document.addEventListener('DOMContentLoaded', function() {
     var loginLink = document.getElementById('loginLink');
     if (loginLink) {
         loginLink.addEventListener('click', function(event) {
-            // Предотвращаем стандартное поведение ссылки
             event.preventDefault();
 
-            // Проверяем наличие accessToken в localStorage
             if (localStorage.getItem('accessToken')) {
-                // Если токен существует, перенаправляем на страницу профиля
                 window.location.href = '/profile';
             } else {
-                // Если токена нет, выполняем стандартное поведение ссылки
                 window.location.href = this.getAttribute('href');
             }
         });
@@ -373,7 +391,7 @@ function createButton(iconClass, onClick, id) {
     const button = document.createElement('button');
     button.onclick = onClick;
     button.id = id;
-    button.className = 'icon-button'; // Добавьте класс для стилизации, если нужно
+    button.className = 'icon-button';
 
     const icon = document.createElement('i');
     icon.className = iconClass;
@@ -381,3 +399,124 @@ function createButton(iconClass, onClick, id) {
 
     return button;
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const accessToken = localStorage.getItem('accessToken');
+
+    const fetchOptions = {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    };
+
+    let clinicsWithDoctors = [];
+
+    function fetchClinicsAndDoctors() {
+        fetch('/api/v1/clinic/all', fetchOptions)
+            .then(response => response.json())
+            .then(data => {
+                clinicsWithDoctors = data.clinics;
+                const clinicSelect = document.getElementById('clinic');
+                clinicsWithDoctors.forEach(clinic => {
+                    const option = document.createElement('option');
+                    option.value = clinic.id;
+                    option.textContent = clinic.name;
+                    clinicSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Ошибка при получении списка клиник и докторов:', error));
+    }
+
+    function showDoctorsForClinic(clinicId) {
+        const clinic = clinicsWithDoctors.find(clinic => clinic.id.toString() === clinicId);
+        const doctors = clinic ? clinic.doctors : [];
+        const doctorSelect = document.getElementById('doctor');
+        doctorSelect.innerHTML = ''; // Очищаем список докторов
+
+        doctors.forEach(doctor => {
+            const option = document.createElement('option');
+            option.value = doctor.id;
+            option.textContent = `${doctor.firstName} ${doctor.lastName} (${doctor.specialization})`;
+            doctorSelect.appendChild(option);
+        });
+    }
+
+    document.getElementById('clinic').addEventListener('change', function(event) {
+        showDoctorsForClinic(event.target.value);
+    });
+
+    fetchClinicsAndDoctors();
+});
+
+async function submitRecord() {
+
+    var userId;
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+        try {
+            const response = await fetch('/api/v1/user/get', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+
+            const data = await response.json();
+            userId = data.id;
+
+        } catch (error) {
+            console.error('There has been a problem with your fetch operation:', error);
+            alert("Ошибка загрузки данных пользователя.");
+        }
+    } else {
+        alert("AccessToken отсутствует. Пожалуйста, войдите в систему.")
+    }
+
+    const doctorId = document.getElementById('doctor').value;
+    const clinicId = document.getElementById('clinic').value;
+    const startTime = document.getElementById('startTime').value;
+    const endTime = document.getElementById('endTime').value;
+
+    if (!doctorId || !clinicId || !startTime || !endTime) {
+        alert('Пожалуйста, заполните все поля.');
+        return;
+    }
+
+    if (new Date(startTime) >= new Date(endTime)) {
+        alert('Время начала должно быть раньше времени окончания.');
+        return;
+    }
+
+    const recordData = {
+        doctorId: doctorId,
+        userId: userId,
+        hospitalId: clinicId,
+        startTime: startTime,
+        endTime: endTime
+    };
+
+    if (accessToken) {
+        const response = await fetch('/api/v1/record/add', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(recordData)
+        });
+
+        const data = await response.json();
+        alert(data.message)
+
+    } else {
+        alert("AccessToken отсутствует. Пожалуйста, войдите в систему");
+    }
+}
+
+document.getElementById('submitRecordButton').addEventListener('click', async function(event) {
+    event.preventDefault();
+});

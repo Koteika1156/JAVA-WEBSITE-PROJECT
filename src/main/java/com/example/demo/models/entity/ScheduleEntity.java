@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -18,8 +21,8 @@ public class ScheduleEntity {
     private String hospitalId;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private String startTime;
+    private LocalDateTime startTime;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private String endTime;
+    private LocalDateTime endTime;
 }

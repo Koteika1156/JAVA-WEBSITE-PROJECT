@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,8 +16,8 @@ public class ScheduleRecordRequest {
     private String doctorId;
     private String userId;
     private String hospitalId;
-    private String startTime;
-    private String endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
     public static ScheduleEntity toEntity(ScheduleRecordRequest scheduleRecordRequest) {
         ScheduleEntity scheduleEntity = new ScheduleEntity();
