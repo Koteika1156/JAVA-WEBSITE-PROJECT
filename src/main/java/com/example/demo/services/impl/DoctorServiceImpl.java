@@ -39,7 +39,7 @@ public class DoctorServiceImpl implements DoctorService {
 
             return ResponseEntity.ok()
                     .body(
-                            DoctorResponse.toDoctorResponse(doctorEntity)
+                            DoctorResponse.toResponse(doctorEntity)
                     );
         } catch (DoctorNotFound e) {
             logger.error(e.getMessage());
@@ -70,7 +70,7 @@ public class DoctorServiceImpl implements DoctorService {
                             DoctorsResponse.builder()
                                     .doctors(
                                             doctors.stream()
-                                                    .map(DoctorResponse::toDoctorResponse)
+                                                    .map(DoctorResponse::toResponse)
                                                     .toList()
                                     )
                                     .build()

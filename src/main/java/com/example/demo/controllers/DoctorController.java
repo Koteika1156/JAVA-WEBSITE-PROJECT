@@ -33,11 +33,6 @@ public class DoctorController {
         return doctorService.addDoctor(doctorRequest);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<?> update() {
-        return null;
-    }
-
     @DeleteMapping("/delete")
     public ResponseEntity<DoctorDeleteResponse> deleteDoctor(@RequestParam String id) {
         return doctorService.deleteDoctor(id);

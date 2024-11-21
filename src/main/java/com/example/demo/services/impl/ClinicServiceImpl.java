@@ -68,6 +68,7 @@ public class ClinicServiceImpl implements ClinicService {
                                                     .stream()
                                                     .map(ClinicResponse::toResponse)
                                                     .toList()
+
                                     )
                                     .message("Успешно!")
                                     .build()
@@ -112,11 +113,6 @@ public class ClinicServiceImpl implements ClinicService {
                                     .build()
                     );
         }
-    }
-
-    @Override
-    public ResponseEntity<?> updateClinic() {
-        return null;
     }
 
     @Override
