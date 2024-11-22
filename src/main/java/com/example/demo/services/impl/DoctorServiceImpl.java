@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DoctorServiceImpl implements DoctorService {
@@ -131,5 +132,10 @@ public class DoctorServiceImpl implements DoctorService {
                     );
 
         }
+    }
+
+    @Override
+    public Optional<DoctorEntity> getDoctorById(String id) {
+        return doctorRepository.findById(id);
     }
 }

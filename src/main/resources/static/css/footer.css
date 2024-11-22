@@ -1,7 +1,7 @@
 div.footer {
 	display: flex;
 	height: 85px;
-	background-color: #000;
+	background-color: #f44336;
 	padding-left: 12%;
 	padding-right: 12%;
 	justify-content: space-between;
