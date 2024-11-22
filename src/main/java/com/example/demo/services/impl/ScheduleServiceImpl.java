@@ -12,6 +12,7 @@ import com.example.demo.services.ClinicService;
 import com.example.demo.services.DoctorService;
 import com.example.demo.services.ScheduleService;
 import com.example.demo.services.UserService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
@@ -27,13 +29,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final DoctorService doctorService;
     private final UserService userService;
     private static final Logger logger = LoggerFactory.getLogger(ScheduleServiceImpl.class);
-
-    ScheduleServiceImpl(ScheduleRepository scheduleRepository, DoctorService doctorService, ClinicService clinicService, UserService userService) {
-        this.scheduleRepository = scheduleRepository;
-        this.clinicService = clinicService;
-        this.doctorService = doctorService;
-        this.userService = userService;
-    }
 
     @Override
     public ResponseEntity<ScheduleRecordResponse> addRecord(ScheduleRecordRequest scheduleRecordRequest) {
@@ -60,7 +55,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
 
             if (scheduleRepository.existsByDoctorIdAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(scheduleRecordRequest.getDoctorId(), scheduleRecordRequest.getStartTime(), scheduleRecordRequest.getEndTime())
-            || scheduleRepository.existsByDoctorIdAndEndTimeGreaterThanAndStartTimeLessThan(scheduleRecordRequest.getDoctorId(), scheduleRecordRequest.getStartTime(), scheduleRecordRequest.getEndTime())) {
+                    || scheduleRepository.existsByDoctorIdAndEndTimeGreaterThanAndStartTimeLessThan(scheduleRecordRequest.getDoctorId(), scheduleRecordRequest.getStartTime(), scheduleRecordRequest.getEndTime())) {
                 throw new OutsideClinicHoursException("Время пересекается с другой записью!");
             }
 
@@ -94,7 +89,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     public ResponseEntity<ScheduleUpdateResponse> updateTime(ScheduleUpdateRequest recordUpdateRequest) {
         try {
 
-            if (recordUpdateRequest.getId() == null || recordUpdateRequest.getNewStartTime() == null|| recordUpdateRequest.getNewEndTime() == null) {
+            if (recordUpdateRequest.getId() == null || recordUpdateRequest.getNewStartTime() == null || recordUpdateRequest.getNewEndTime() == null) {
                 return ResponseEntity
                         .badRequest()
                         .body(

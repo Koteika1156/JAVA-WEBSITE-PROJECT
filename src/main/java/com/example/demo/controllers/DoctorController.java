@@ -6,17 +6,15 @@ import com.example.demo.models.response.doctor.DoctorDeleteResponse;
 import com.example.demo.models.response.doctor.DoctorResponse;
 import com.example.demo.models.response.doctor.DoctorsResponse;
 import com.example.demo.services.DoctorService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/doctor")
 public class DoctorController {
     DoctorService doctorService;
-
-    DoctorController(DoctorService doctorService) {
-        this.doctorService = doctorService;
-    }
 
     @GetMapping("/getDoctor")
     public ResponseEntity<DoctorResponse> getDoctor(@RequestParam String id) {

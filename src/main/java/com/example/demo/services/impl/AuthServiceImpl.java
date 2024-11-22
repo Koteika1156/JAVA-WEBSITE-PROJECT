@@ -12,6 +12,7 @@ import com.example.demo.services.AuthService;
 import com.example.demo.services.UserService;
 import com.example.demo.util.TokenUtil;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final TokenUtil tokenUtil;
     private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
@@ -30,17 +32,6 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
 
-    AuthServiceImpl(
-            UserService userService,
-            TokenUtil tokenUtil,
-            AuthenticationManager authenticationManager,
-            PasswordEncoder passwordEncoder
-    ) {
-        this.userService = userService;
-        this.tokenUtil = tokenUtil;
-        this.authenticationManager = authenticationManager;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     @Transactional(rollbackOn = Exception.class)

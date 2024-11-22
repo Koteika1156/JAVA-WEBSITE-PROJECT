@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -29,8 +30,22 @@ public class ScheduleResponse extends ModelWithMessage {
                 .id(schedule.getId())
                 .startTime(schedule.getStartTime())
                 .endTime(schedule.getEndTime())
-                .hospitalId(schedule.getClinic().getId())
-                .doctorId(schedule.getDoctor().getId())
+                .userId(schedule.getUser() != null ? schedule.getUser().getId() : null)
+                .hospitalId(schedule.getClinic() != null ? schedule.getClinic().getId() : null)
+                .doctorId(schedule.getDoctor() != null ? schedule.getDoctor().getId() : null)
                 .build();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ScheduleResponse that = (ScheduleResponse) o;
+        return Objects.equals(id, that.id) && Objects.equals(doctorId, that.doctorId) && Objects.equals(userId, that.userId) && Objects.equals(hospitalId, that.hospitalId) && Objects.equals(startTime, that.startTime) && Objects.equals(endTime, that.endTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, doctorId, userId, hospitalId, startTime, endTime);
     }
 }

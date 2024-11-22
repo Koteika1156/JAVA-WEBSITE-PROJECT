@@ -2,6 +2,7 @@ package com.example.demo.services.impl;
 
 import com.example.demo.models.dto.UserDTO;
 import com.example.demo.services.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

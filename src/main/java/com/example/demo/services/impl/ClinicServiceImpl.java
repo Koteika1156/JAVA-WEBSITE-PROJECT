@@ -9,6 +9,7 @@ import com.example.demo.models.response.clinic.ClinicResponse;
 import com.example.demo.models.response.clinic.ClinicsResponse;
 import com.example.demo.repository.ClinicRepository;
 import com.example.demo.services.ClinicService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +19,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ClinicServiceImpl implements ClinicService {
     private final ClinicRepository clinicRepository;
     private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
-
-    ClinicServiceImpl(ClinicRepository clinicRepository) {
-        this.clinicRepository = clinicRepository;
-    }
 
     public Optional<ClinicEntity> getClinicById(String id) {
         return clinicRepository.findById(id);

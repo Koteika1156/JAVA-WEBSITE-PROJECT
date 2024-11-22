@@ -6,19 +6,17 @@ import com.example.demo.models.response.schedule.ScheduleRecordResponse;
 import com.example.demo.models.response.schedule.ScheduleResponse;
 import com.example.demo.models.response.schedule.SchedulesResponse;
 import com.example.demo.services.ScheduleService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.models.request.schedule.ScheduleUpdateRequest;
 import com.example.demo.models.response.schedule.ScheduleUpdateResponse;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/record")
 public class RecordController {
     private final ScheduleService scheduleService;
-
-    public RecordController(ScheduleService scheduleService) {
-        this.scheduleService = scheduleService;
-    }
 
     @PostMapping("/add")
     public ResponseEntity<ScheduleRecordResponse> addRecord(@RequestBody ScheduleRecordRequest request) {

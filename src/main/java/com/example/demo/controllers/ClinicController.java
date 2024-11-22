@@ -6,18 +6,16 @@ import com.example.demo.models.response.clinic.ClinicDeleteResponse;
 import com.example.demo.models.response.clinic.ClinicResponse;
 import com.example.demo.models.response.clinic.ClinicsResponse;
 import com.example.demo.services.ClinicService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/clinic")
 public class ClinicController {
 
     private final ClinicService clinicService;
-
-    public ClinicController(ClinicService clinicService) {
-        this.clinicService = clinicService;
-    }
 
     @GetMapping("/getClinic")
     public ResponseEntity<ClinicResponse> getClinic(@RequestParam String clinicId) {

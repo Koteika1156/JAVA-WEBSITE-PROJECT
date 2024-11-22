@@ -10,6 +10,7 @@ import com.example.demo.models.response.doctor.DoctorsResponse;
 import com.example.demo.repository.DoctorRepository;
 import com.example.demo.services.ClinicService;
 import com.example.demo.services.DoctorService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -19,17 +20,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class DoctorServiceImpl implements DoctorService {
 
     private final DoctorRepository doctorRepository;
     private static final Logger logger = LoggerFactory.getLogger(DoctorServiceImpl.class);
     private final ClinicService clinicService;
-
-    DoctorServiceImpl(DoctorRepository doctorRepository, ClinicService clinicService) {
-        this.doctorRepository = doctorRepository;
-        this.clinicService = clinicService;
-    }
-
 
     @Override
     public ResponseEntity<DoctorResponse> getDoctor(String id) {

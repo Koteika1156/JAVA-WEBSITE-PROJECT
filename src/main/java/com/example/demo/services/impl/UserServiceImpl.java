@@ -9,6 +9,7 @@ import com.example.demo.models.response.user.UserResponse;
 import com.example.demo.models.response.user.UserUpdateResponse;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.services.UserService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -19,16 +20,12 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private final PasswordEncoder passwordEncoder;
-
-    UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     public Optional<UserEntity> getUserEntityById(String id) {
         return userRepository.findById(id);
