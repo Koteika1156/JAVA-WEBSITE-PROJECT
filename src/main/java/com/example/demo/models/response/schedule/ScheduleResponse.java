@@ -27,11 +27,10 @@ public class ScheduleResponse extends ModelWithMessage {
         return ScheduleResponse
                 .builder()
                 .id(schedule.getId())
-                .doctorId(schedule.getDoctorId())
-                .userId(schedule.getUserId())
-                .hospitalId(schedule.getHospitalId())
                 .startTime(schedule.getStartTime())
                 .endTime(schedule.getEndTime())
+                .hospitalId(schedule.getClinic().getId())
+                .doctorId(schedule.getDoctor().getId())
                 .build();
     }
 }

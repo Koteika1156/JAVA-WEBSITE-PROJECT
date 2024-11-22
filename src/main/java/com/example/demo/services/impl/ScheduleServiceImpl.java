@@ -1,18 +1,17 @@
 package com.example.demo.services.impl;
 
-import com.example.demo.exception.ClinicNotFound;
-import com.example.demo.exception.OutsideClinicHoursException;
-import com.example.demo.exception.RecordAlreadyExist;
-import com.example.demo.exception.RecordNotFound;
+import com.example.demo.exception.*;
 import com.example.demo.models.entity.ClinicEntity;
+import com.example.demo.models.entity.DoctorEntity;
 import com.example.demo.models.entity.ScheduleEntity;
 import com.example.demo.models.request.schedule.ScheduleRecordRequest;
 import com.example.demo.models.request.schedule.ScheduleUpdateRequest;
 import com.example.demo.models.response.schedule.*;
-import com.example.demo.repository.ClinicRepository;
 import com.example.demo.repository.ScheduleRepository;
+import com.example.demo.services.ClinicService;
+import com.example.demo.services.DoctorService;
 import com.example.demo.services.ScheduleService;
-import jakarta.transaction.Transactional;
+import com.example.demo.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -24,16 +23,19 @@ import java.util.List;
 public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
-    private final ClinicRepository clinicRepository;
+    private final ClinicService clinicService;
+    private final DoctorService doctorService;
+    private final UserService userService;
     private static final Logger logger = LoggerFactory.getLogger(ScheduleServiceImpl.class);
 
-    ScheduleServiceImpl(ScheduleRepository scheduleRepository, ClinicRepository clinicRepository) {
+    ScheduleServiceImpl(ScheduleRepository scheduleRepository, DoctorService doctorService, ClinicService clinicService, UserService userService) {
         this.scheduleRepository = scheduleRepository;
-        this.clinicRepository = clinicRepository;
+        this.clinicService = clinicService;
+        this.doctorService = doctorService;
+        this.userService = userService;
     }
 
     @Override
-    @Transactional(rollbackOn = Exception.class)
     public ResponseEntity<ScheduleRecordResponse> addRecord(ScheduleRecordRequest scheduleRecordRequest) {
         try {
 
@@ -41,15 +43,29 @@ public class ScheduleServiceImpl implements ScheduleService {
                 throw new RecordAlreadyExist("Время занято");
             }
 
-            ClinicEntity clinic = clinicRepository.findById(scheduleRecordRequest.getHospitalId())
+            DoctorEntity doctor = doctorService.getDoctorById(scheduleRecordRequest.getDoctorId()).orElseThrow(
+                    () -> new DoctorNotFound("Доктор с таким ID не найден!")
+            );
+
+            ClinicEntity clinic = clinicService.getClinicById(doctor.getClinic().getId())
                     .orElseThrow(() -> new ClinicNotFound("Клиника не найдена"));
+
+            if (scheduleRecordRequest.getStartTime().toLocalDate() != scheduleRecordRequest.getEndTime().toLocalDate()) {
+                throw new OutsideClinicHoursException("Временной промежуток задевает разные даты");
+            }
 
             if (scheduleRecordRequest.getStartTime().toLocalTime().isBefore(clinic.getOpenTime()) ||
                     scheduleRecordRequest.getEndTime().toLocalTime().isAfter(clinic.getCloseTime())) {
                 throw new OutsideClinicHoursException("Время вне рабочего времени клиники");
             }
 
-            scheduleRepository.save(ScheduleRecordRequest.toEntity(scheduleRecordRequest));
+            if (scheduleRepository.existsByDoctorIdAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(scheduleRecordRequest.getDoctorId(), scheduleRecordRequest.getStartTime(), scheduleRecordRequest.getEndTime())
+            || scheduleRepository.existsByDoctorIdAndEndTimeGreaterThanAndStartTimeLessThan(scheduleRecordRequest.getDoctorId(), scheduleRecordRequest.getStartTime(), scheduleRecordRequest.getEndTime())) {
+                throw new OutsideClinicHoursException("Время пересекается с другой записью!");
+            }
+
+            ScheduleEntity scheduleEntity = ScheduleRecordRequest.toEntity(scheduleRecordRequest, doctorService, userService);
+            scheduleRepository.save(scheduleEntity);
 
             return ResponseEntity
                     .ok(
@@ -94,12 +110,21 @@ public class ScheduleServiceImpl implements ScheduleService {
                     () -> new RecordNotFound("Запись не найдена!")
             );
 
-            ClinicEntity clinic = clinicRepository.findById(schedule.getHospitalId())
+            ClinicEntity clinic = clinicService.getClinicById(schedule.getId())
                     .orElseThrow(() -> new RecordNotFound("Клиника не найдена"));
 
             if (recordUpdateRequest.getNewStartTime().toLocalTime().isBefore(clinic.getOpenTime()) ||
                     recordUpdateRequest.getNewEndTime().toLocalTime().isAfter(clinic.getCloseTime())) {
                 throw new OutsideClinicHoursException("Время вне рабочего времени клиники");
+            }
+
+            if (recordUpdateRequest.getNewStartTime().toLocalDate() != recordUpdateRequest.getNewEndTime().toLocalDate()) {
+                throw new OutsideClinicHoursException("Временной промежуток задевает разные даты");
+            }
+
+            if (scheduleRepository.existsByDoctorIdAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(schedule.getDoctor().getId(), recordUpdateRequest.getNewStartTime(), recordUpdateRequest.getNewEndTime())
+                    || scheduleRepository.existsByDoctorIdAndEndTimeGreaterThanAndStartTimeLessThan(schedule.getDoctor().getId(), recordUpdateRequest.getNewStartTime(), recordUpdateRequest.getNewEndTime())) {
+                throw new OutsideClinicHoursException("Время пересекается с другой записью!");
             }
 
             schedule.setStartTime(recordUpdateRequest.getNewStartTime());

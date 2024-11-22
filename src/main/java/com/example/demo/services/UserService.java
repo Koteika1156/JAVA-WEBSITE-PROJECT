@@ -15,6 +15,8 @@ public interface UserService {
 
     Optional<UserDTO> getUserById(String id);
 
+    Optional<UserEntity> getUserEntityById(String id);
+
     void saveUser(UserEntity user);
 
     ResponseEntity<UserResponse> getUser();
