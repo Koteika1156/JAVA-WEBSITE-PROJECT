@@ -2,16 +2,17 @@ package com.example.demo.models.response.user;
 
 import com.example.demo.models.UserRole;
 import com.example.demo.models.entity.UserEntity;
-import lombok.AllArgsConstructor;
+import com.example.demo.models.interfaces.ModelWithMessage;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+
+import java.util.Objects;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class UserResponse {
+@SuperBuilder
+public class UserResponse extends ModelWithMessage {
     private String id;
     private String firstName;
     private String lastName;
@@ -23,13 +24,25 @@ public class UserResponse {
             return null;
         }
 
-        UserResponse response = new UserResponse();
-        response.setId(user.getId());
-        response.setFirstName(user.getFirstName());
-        response.setLastName(user.getLastName());
-        response.setNumber(user.getNumber());
-        response.setRole(user.getRole());
+        return UserResponse.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .number(user.getNumber())
+                .role(user.getRole())
+                .build();
+    }
 
-        return response;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserResponse that = (UserResponse) o;
+        return Objects.equals(id, that.id) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(number, that.number) && role == that.role;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, number, role);
     }
 }

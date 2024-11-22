@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
         Optional<UserEntity> userEntity = userRepository.findById(id);
 
         return Optional.ofNullable(
-                UserDTO.toDTO(userEntity.isPresent() ? userEntity.get() : null)
+                UserDTO.toDTO(userEntity.orElse(null))
         );
     }
 
@@ -71,7 +71,9 @@ public class UserServiceImpl implements UserService {
             return ResponseEntity
                     .badRequest()
                     .body(
-                            UserResponse.toResponse(null)
+                            UserResponse.builder()
+                                    .message("Ошибка получения пользователя!")
+                                    .build()
                     );
         }
     }

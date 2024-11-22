@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,5 +31,18 @@ public class UserDTO {
         userDTO.setPassword(userEntity.getPassword());
         userDTO.setRole(userEntity.getRole());
         return userDTO;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserDTO userDTO = (UserDTO) o;
+        return Objects.equals(id, userDTO.id) && Objects.equals(username, userDTO.username) && Objects.equals(password, userDTO.password) && role == userDTO.role;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, password, role);
     }
 }

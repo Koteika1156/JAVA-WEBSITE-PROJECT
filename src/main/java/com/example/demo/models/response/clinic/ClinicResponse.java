@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -41,10 +42,26 @@ public class ClinicResponse extends ModelWithMessage {
                 .openTime(clinic.getOpenTime())
                 .closeTime(clinic.getCloseTime())
                 .doctors(
-                        clinic.getDoctors().stream()
-                                .map(DoctorResponse::toDoctorResponse)
-                                .toList()
+                        clinic.getDoctors() != null ?
+                                clinic.getDoctors().stream()
+                                        .map(DoctorResponse::toResponse)
+                                        .toList()
+                                :
+                                List.of()
                 )
                 .build();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ClinicResponse that = (ClinicResponse) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(address, that.address) && Objects.equals(phone, that.phone) && Objects.equals(email, that.email) && Objects.equals(openTime, that.openTime) && Objects.equals(closeTime, that.closeTime) && Objects.equals(doctors, that.doctors);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, address, phone, email, openTime, closeTime, doctors);
     }
 }

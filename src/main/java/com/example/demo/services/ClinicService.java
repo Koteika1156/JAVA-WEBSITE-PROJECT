@@ -18,8 +18,6 @@ public interface ClinicService {
 
     ResponseEntity<ClinicAddResponse> addClinic(ClinicAddRequest clinicAddRequest);
 
-    ResponseEntity<?> updateClinic();
-
     ResponseEntity<ClinicDeleteResponse> deleteClinic(String clinicId);
 
     Optional<ClinicEntity> getClinicById(String id);

@@ -9,6 +9,4 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 public class UserLoginResponse extends TokenCredentials {
-    private boolean result;
-    private String message;
 }

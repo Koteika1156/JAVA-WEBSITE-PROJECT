@@ -46,7 +46,6 @@ public class AuthServiceImpl implements AuthService {
     @Transactional(rollbackOn = Exception.class)
     public ResponseEntity<UserLoginResponse> login(UserLoginRequest userLoginRequest) {
         try {
-
             Optional<UserDTO> userDTO = userService.getUserByUsername(userLoginRequest.getUsername());
 
             if (userDTO.isEmpty()) {

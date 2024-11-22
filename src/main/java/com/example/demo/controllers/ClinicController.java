@@ -34,11 +34,6 @@ public class ClinicController {
         return clinicService.addClinic(clinicAddRequest);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<?> updateClinic() {
-        return clinicService.updateClinic();
-    }
-
     @DeleteMapping("/delete")
     public ResponseEntity<ClinicDeleteResponse> deleteClinic(@RequestParam String clinicId) {
         return clinicService.deleteClinic(clinicId);

@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @SuperBuilder
@@ -17,7 +19,7 @@ public class DoctorResponse extends ModelWithMessage {
 
     private String specialization;
 
-    public static DoctorResponse toDoctorResponse(DoctorEntity doctorEntity) {
+    public static DoctorResponse toResponse(DoctorEntity doctorEntity) {
         if (doctorEntity == null) {
             return null;
         }
@@ -28,5 +30,18 @@ public class DoctorResponse extends ModelWithMessage {
                 .lastName(doctorEntity.getLastName())
                 .specialization(doctorEntity.getSpecialization())
                 .build();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DoctorResponse that = (DoctorResponse) o;
+        return Objects.equals(id, that.id) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(specialization, that.specialization);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, specialization);
     }
 }
