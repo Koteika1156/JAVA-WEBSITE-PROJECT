@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,7 @@ import javax.crypto.SecretKey;
 import java.time.Instant;
 import java.util.Date;
 
+@Getter
 @Component
 public class TokenUtil {
     @Value("${jwt.secret}")
@@ -28,10 +30,10 @@ public class TokenUtil {
         this.key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
-    private static final String SUB_KEY = "sub";
-    private static final String EXP_KEY = "exp";
-    private static final String IAT_KEY = "iat";
-    private static final String ROLE_KEY = "role";
+    public static final String SUB_KEY = "sub";
+    public static final String EXP_KEY = "exp";
+    public static final String IAT_KEY = "iat";
+    public static final String ROLE_KEY = "role";
 
     public String generateAccessToken(String userId, UserRole role) {
         Instant now = Instant.now();
@@ -77,20 +79,12 @@ public class TokenUtil {
     }
 
     public String getUserId(String token) {
-        return getAllClaims(token).getSubject();
+        return parseToken(token).getSubject();
     }
 
     public UserRole getUserRole(String token) {
-        String roleString = (String) getAllClaims(token).get(ROLE_KEY);
+        String roleString = (String) parseToken(token).get(ROLE_KEY);
         return UserRole.fromValue(roleString);
-    }
-
-    private Claims getAllClaims(String token) {
-        return Jwts.parser()
-                .verifyWith((SecretKey) key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
     }
 }
 
