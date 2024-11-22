@@ -45,8 +45,8 @@ public class ScheduleServiceImpl implements ScheduleService {
             ClinicEntity clinic = clinicService.getClinicById(doctor.getClinic().getId())
                     .orElseThrow(() -> new ClinicNotFound("Клиника не найдена"));
 
-            if (scheduleRecordRequest.getStartTime().toLocalDate() != scheduleRecordRequest.getEndTime().toLocalDate()) {
-                throw new OutsideClinicHoursException("Временной промежуток задевает разные даты");
+            if (!scheduleRecordRequest.getStartTime().toLocalDate().equals(scheduleRecordRequest.getEndTime().toLocalDate())) {
+                throw new DifferentDatesException("Временной промежуток задевает разные даты");
             }
 
             if (scheduleRecordRequest.getStartTime().toLocalTime().isBefore(clinic.getOpenTime()) ||
@@ -55,8 +55,8 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
 
             if (scheduleRepository.existsByDoctorIdAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(scheduleRecordRequest.getDoctorId(), scheduleRecordRequest.getStartTime(), scheduleRecordRequest.getEndTime())
-                    || scheduleRepository.existsByDoctorIdAndEndTimeGreaterThanAndStartTimeLessThan(scheduleRecordRequest.getDoctorId(), scheduleRecordRequest.getStartTime(), scheduleRecordRequest.getEndTime())) {
-                throw new OutsideClinicHoursException("Время пересекается с другой записью!");
+            || scheduleRepository.existsByDoctorIdAndEndTimeGreaterThanAndStartTimeLessThan(scheduleRecordRequest.getDoctorId(), scheduleRecordRequest.getStartTime(), scheduleRecordRequest.getEndTime())) {
+                throw new CrossingTimeException("Время пересекается с другой записью!");
             }
 
             ScheduleEntity scheduleEntity = ScheduleRecordRequest.toEntity(scheduleRecordRequest, doctorService, userService);
@@ -113,13 +113,13 @@ public class ScheduleServiceImpl implements ScheduleService {
                 throw new OutsideClinicHoursException("Время вне рабочего времени клиники");
             }
 
-            if (recordUpdateRequest.getNewStartTime().toLocalDate() != recordUpdateRequest.getNewEndTime().toLocalDate()) {
-                throw new OutsideClinicHoursException("Временной промежуток задевает разные даты");
+            if (!recordUpdateRequest.getNewStartTime().toLocalDate().equals(recordUpdateRequest.getNewEndTime().toLocalDate())) {
+                throw new DifferentDatesException("Временной промежуток задевает разные даты");
             }
 
             if (scheduleRepository.existsByDoctorIdAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(schedule.getDoctor().getId(), recordUpdateRequest.getNewStartTime(), recordUpdateRequest.getNewEndTime())
                     || scheduleRepository.existsByDoctorIdAndEndTimeGreaterThanAndStartTimeLessThan(schedule.getDoctor().getId(), recordUpdateRequest.getNewStartTime(), recordUpdateRequest.getNewEndTime())) {
-                throw new OutsideClinicHoursException("Время пересекается с другой записью!");
+                throw new CrossingTimeException("Время пересекается с другой записью!");
             }
 
             schedule.setStartTime(recordUpdateRequest.getNewStartTime());

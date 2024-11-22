@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/doctor")
 public class DoctorController {
-    DoctorService doctorService;
+    private final DoctorService doctorService;
 
     @GetMapping("/getDoctor")
     public ResponseEntity<DoctorResponse> getDoctor(@RequestParam String id) {
