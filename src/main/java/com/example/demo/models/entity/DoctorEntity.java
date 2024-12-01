@@ -1,7 +1,9 @@
 package com.example.demo.models.entity;
 
+import com.example.demo.models.Prototype;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Objects;
@@ -10,7 +12,8 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(name = "doctors")
-public class DoctorEntity {
+@NoArgsConstructor
+public class DoctorEntity implements Prototype<DoctorEntity> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -22,8 +25,16 @@ public class DoctorEntity {
     private String specialization;
 
     @ManyToOne
-    @JoinColumn(name="clinic_id")
+    @JoinColumn(name = "clinic_id")
     private ClinicEntity clinic;
+
+    private DoctorEntity(DoctorEntity doctorEntity) {
+        this.id = doctorEntity.getId();
+        this.firstName = doctorEntity.getFirstName();
+        this.lastName = doctorEntity.getLastName();
+        this.specialization = doctorEntity.getSpecialization();
+        this.clinic = doctorEntity.getClinic();
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -36,5 +47,10 @@ public class DoctorEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, firstName, lastName, specialization, clinic);
+    }
+
+    @Override
+    public DoctorEntity clone() {
+        return new DoctorEntity(this);
     }
 }

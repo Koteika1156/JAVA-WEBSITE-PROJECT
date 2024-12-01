@@ -1,5 +1,6 @@
 package com.example.demo.models.dto;
 
+import com.example.demo.models.Prototype;
 import com.example.demo.models.UserRole;
 import com.example.demo.models.entity.UserEntity;
 import lombok.AllArgsConstructor;
@@ -13,12 +14,23 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class UserDTO implements Prototype<UserDTO> {
     private String id;
 
     private String username;
     private String password;
+    private String firstName;
+    private String lastName;
     private UserRole role;
+
+    public UserDTO(UserDTO userDTO) {
+        this.id = userDTO.getId();
+        this.username = userDTO.getUsername();
+        this.password = userDTO.getPassword();
+        this.role = userDTO.getRole();
+        this.firstName = userDTO.getFirstName();
+        this.lastName = userDTO.getLastName();
+    }
 
     public static UserDTO toDTO(UserEntity userEntity) {
         if (userEntity == null) {
@@ -30,6 +42,9 @@ public class UserDTO {
         userDTO.setUsername(userEntity.getUsername());
         userDTO.setPassword(userEntity.getPassword());
         userDTO.setRole(userEntity.getRole());
+        userDTO.setFirstName(userEntity.getFirstName());
+        userDTO.setLastName(userEntity.getLastName());
+
         return userDTO;
     }
 
@@ -44,5 +59,10 @@ public class UserDTO {
     @Override
     public int hashCode() {
         return Objects.hash(id, username, password, role);
+    }
+
+    @Override
+    public UserDTO clone() {
+        return new UserDTO(this);
     }
 }

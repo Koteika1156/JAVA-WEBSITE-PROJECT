@@ -1,7 +1,9 @@
 package com.example.demo.models.entity;
 
+import com.example.demo.models.Prototype;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalTime;
@@ -12,7 +14,8 @@ import java.util.Objects;
 @Getter
 @Setter
 @Table(name = "clinics")
-public class ClinicEntity {
+@NoArgsConstructor
+public class ClinicEntity implements Prototype<ClinicEntity> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -26,8 +29,19 @@ public class ClinicEntity {
     private LocalTime openTime;
     private LocalTime closeTime;
 
-    @OneToMany(mappedBy="clinic")
+    @OneToMany(mappedBy = "clinic")
     private List<DoctorEntity> doctors;
+
+    private ClinicEntity(ClinicEntity clinicEntity) {
+        this.id = clinicEntity.getId();
+        this.name = clinicEntity.getName();
+        this.address = clinicEntity.getAddress();
+        this.phone = clinicEntity.getPhone();
+        this.email = clinicEntity.getEmail();
+        this.openTime = clinicEntity.getOpenTime();
+        this.closeTime = clinicEntity.getCloseTime();
+        this.doctors = clinicEntity.getDoctors();
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -40,5 +54,11 @@ public class ClinicEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, address, phone, email, openTime, closeTime, doctors);
+    }
+
+
+    @Override
+    public ClinicEntity clone() {
+        return new ClinicEntity(this);
     }
 }

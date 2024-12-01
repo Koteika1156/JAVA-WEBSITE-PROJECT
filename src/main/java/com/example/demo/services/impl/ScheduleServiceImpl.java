@@ -12,6 +12,10 @@ import com.example.demo.services.ClinicService;
 import com.example.demo.services.DoctorService;
 import com.example.demo.services.ScheduleService;
 import com.example.demo.services.UserService;
+import com.example.demo.util.observer.DoctorNotifier;
+import com.example.demo.util.observer.NotifierData;
+import com.example.demo.util.observer.ScheduleNotifier;
+import com.example.demo.util.observer.UserNotifier;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +37,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public ResponseEntity<ScheduleRecordResponse> addRecord(ScheduleRecordRequest scheduleRecordRequest) {
         try {
+            ScheduleNotifier scheduleNotifier = new ScheduleNotifier();
+
+            UserNotifier userNotifier = new UserNotifier();
+            DoctorNotifier doctorNotifier = new DoctorNotifier();
+
+            scheduleNotifier.subscribe(userNotifier);
+            scheduleNotifier.subscribe(doctorNotifier);
 
             if (scheduleRepository.findByStartTimeAndDoctorId(scheduleRecordRequest.getStartTime(), scheduleRecordRequest.getDoctorId()).isPresent()) {
                 throw new RecordAlreadyExist("Время занято");
@@ -55,12 +66,19 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
 
             if (scheduleRepository.existsByDoctorIdAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(scheduleRecordRequest.getDoctorId(), scheduleRecordRequest.getStartTime(), scheduleRecordRequest.getEndTime())
-            || scheduleRepository.existsByDoctorIdAndEndTimeGreaterThanAndStartTimeLessThan(scheduleRecordRequest.getDoctorId(), scheduleRecordRequest.getStartTime(), scheduleRecordRequest.getEndTime())) {
+                    || scheduleRepository.existsByDoctorIdAndEndTimeGreaterThanAndStartTimeLessThan(scheduleRecordRequest.getDoctorId(), scheduleRecordRequest.getStartTime(), scheduleRecordRequest.getEndTime())) {
                 throw new CrossingTimeException("Время пересекается с другой записью!");
             }
 
             ScheduleEntity scheduleEntity = ScheduleRecordRequest.toEntity(scheduleRecordRequest, doctorService, userService);
             scheduleRepository.save(scheduleEntity);
+
+            NotifierData notifierData = new NotifierData(
+                    scheduleRecordRequest.getUserId(),
+                    scheduleRecordRequest.getDoctorId()
+            );
+
+            scheduleNotifier.notifySubscribers(notifierData);
 
             return ResponseEntity
                     .ok(

@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import com.example.demo.models.dto.DoctorDTO;
 import com.example.demo.models.entity.DoctorEntity;
 import com.example.demo.models.request.doctor.DoctorRequest;
 import com.example.demo.models.response.doctor.DoctorAddResponse;
@@ -11,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import java.util.Optional;
 
 public interface DoctorService {
+    Optional<DoctorDTO> getDoctorDTOById(String id);
+
     ResponseEntity<DoctorResponse> getDoctor(String id);
 
     ResponseEntity<DoctorsResponse> getAll();

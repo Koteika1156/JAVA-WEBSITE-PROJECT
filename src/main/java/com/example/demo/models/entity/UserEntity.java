@@ -1,8 +1,10 @@
 package com.example.demo.models.entity;
 
+import com.example.demo.models.Prototype;
 import com.example.demo.models.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Objects;
@@ -11,7 +13,8 @@ import java.util.Objects;
 @Getter
 @Setter
 @Table(name = "users")
-public class UserEntity {
+@NoArgsConstructor
+public class UserEntity implements Prototype<UserEntity> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -26,6 +29,16 @@ public class UserEntity {
     private String number;
     private UserRole role;
 
+    private UserEntity(UserEntity user) {
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.password = user.getPassword();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.number = user.getNumber();
+        this.role = user.getRole();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -37,5 +50,10 @@ public class UserEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, username, password, firstName, lastName, number, role);
+    }
+
+    @Override
+    public UserEntity clone() {
+        return new UserEntity(this);
     }
 }

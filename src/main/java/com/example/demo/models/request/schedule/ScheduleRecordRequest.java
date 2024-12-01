@@ -2,6 +2,7 @@ package com.example.demo.models.request.schedule;
 
 import com.example.demo.exception.ClinicNotFound;
 import com.example.demo.exception.DoctorNotFound;
+import com.example.demo.models.Prototype;
 import com.example.demo.models.entity.DoctorEntity;
 import com.example.demo.models.entity.ScheduleEntity;
 import com.example.demo.models.entity.UserEntity;
@@ -18,13 +19,20 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ScheduleRecordRequest {
+public class ScheduleRecordRequest implements Prototype<ScheduleRecordRequest> {
     private String doctorId;
     private String userId;
     private String clinicId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
+    public ScheduleRecordRequest(ScheduleRecordRequest scheduleRecordRequest) {
+        this.doctorId = scheduleRecordRequest.getDoctorId();
+        this.userId = scheduleRecordRequest.getUserId();
+        this.clinicId = scheduleRecordRequest.getClinicId();
+        this.startTime = scheduleRecordRequest.getStartTime();
+        this.endTime = scheduleRecordRequest.getEndTime();
+    }
 
     public static ScheduleEntity toEntity(ScheduleRecordRequest scheduleRequest, DoctorService doctorService, UserService userService) {
         if (scheduleRequest == null) {
@@ -49,6 +57,11 @@ public class ScheduleRecordRequest {
         scheduleEntity.setClinic(doctor.getClinic());
 
         return scheduleEntity;
+    }
+
+    @Override
+    public ScheduleRecordRequest clone() {
+        return new ScheduleRecordRequest(this);
     }
 }
 

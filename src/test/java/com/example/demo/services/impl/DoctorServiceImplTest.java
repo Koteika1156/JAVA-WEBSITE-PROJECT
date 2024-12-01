@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,7 +67,10 @@ class DoctorServiceImplTest {
 
     @Test
     void testGetAllDoctors() {
-        List<DoctorEntity> doctorEntities = List.of(new DoctorEntity(), new DoctorEntity());
+        List<DoctorEntity> doctorEntities = new ArrayList<DoctorEntity>();
+
+        doctorEntities.add(new DoctorEntity());
+        doctorEntities.add(new DoctorEntity());
 
         when(doctorRepository.findAll()).thenReturn(doctorEntities);
 
@@ -79,7 +83,7 @@ class DoctorServiceImplTest {
 
     @Test
     void testGetAllDoctors_EmptyList() {
-        when(doctorRepository.findAll()).thenReturn(List.of());
+        when(doctorRepository.findAll()).thenReturn(new ArrayList<DoctorEntity>());
 
         ResponseEntity<DoctorsResponse> response = doctorService.getAll();
 

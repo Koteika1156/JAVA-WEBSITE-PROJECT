@@ -9,6 +9,8 @@ import com.example.demo.models.response.clinic.ClinicResponse;
 import com.example.demo.models.response.clinic.ClinicsResponse;
 import com.example.demo.repository.ClinicRepository;
 import com.example.demo.services.ClinicService;
+import com.example.demo.util.strategy.ConcreteOneFieldSortStrategy;
+import com.example.demo.util.strategy.SortStrategy;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -58,19 +61,24 @@ public class ClinicServiceImpl implements ClinicService {
         try {
             List<ClinicEntity> clinicEntities = (List<ClinicEntity>) clinicRepository.findAll();
 
+            SortStrategy<ClinicResponse> strategy = new ConcreteOneFieldSortStrategy<>(
+                    ClinicResponse::getName,
+                    false
+            );
+
             return ResponseEntity
                     .ok(
                             ClinicsResponse.builder()
+                                    .strategy(strategy)
                                     .clinics(
                                             clinicEntities
                                                     .stream()
                                                     .map(ClinicResponse::toResponse)
-                                                    .toList()
-
+                                                    .collect(Collectors.toList())
                                     )
                                     .message("Успешно!")
                                     .build()
-
+                                    .sortClinics()
                     );
         } catch (Exception e) {
             logger.error(e.getMessage());

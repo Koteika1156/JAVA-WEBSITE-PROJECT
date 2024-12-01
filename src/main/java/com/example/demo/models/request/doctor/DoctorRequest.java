@@ -1,6 +1,7 @@
 package com.example.demo.models.request.doctor;
 
 import com.example.demo.exception.ClinicNotFound;
+import com.example.demo.models.Prototype;
 import com.example.demo.models.entity.ClinicEntity;
 import com.example.demo.models.entity.DoctorEntity;
 import com.example.demo.services.ClinicService;
@@ -13,12 +14,19 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DoctorRequest {
+public class DoctorRequest implements Prototype<DoctorRequest> {
     private String firstName;
     private String lastName;
 
     private String specialization;
     private String clinicId;
+
+    public DoctorRequest(DoctorRequest doctorRequest) {
+        this.firstName = doctorRequest.getFirstName();
+        this.lastName = doctorRequest.getLastName();
+        this.specialization = doctorRequest.getSpecialization();
+        this.clinicId = doctorRequest.getClinicId();
+    }
 
     public static DoctorEntity toEntity(DoctorRequest doctorRequest, ClinicService clinicService) {
         if (doctorRequest == null) {
@@ -37,5 +45,10 @@ public class DoctorRequest {
         doctorEntity.setClinic(clinic);
 
         return doctorEntity;
+    }
+
+    @Override
+    public DoctorRequest clone() {
+        return new DoctorRequest(this);
     }
 }

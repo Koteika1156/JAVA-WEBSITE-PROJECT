@@ -1,6 +1,7 @@
 package com.example.demo.services.impl;
 
 import com.example.demo.exception.DoctorNotFound;
+import com.example.demo.models.dto.DoctorDTO;
 import com.example.demo.models.entity.DoctorEntity;
 import com.example.demo.models.request.doctor.DoctorRequest;
 import com.example.demo.models.response.doctor.DoctorAddResponse;
@@ -10,6 +11,8 @@ import com.example.demo.models.response.doctor.DoctorsResponse;
 import com.example.demo.repository.DoctorRepository;
 import com.example.demo.services.ClinicService;
 import com.example.demo.services.DoctorService;
+import com.example.demo.util.strategy.ConcreteMultiFieldSortStrategy;
+import com.example.demo.util.strategy.SortStrategy;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +30,15 @@ public class DoctorServiceImpl implements DoctorService {
     private final DoctorRepository doctorRepository;
     private static final Logger logger = LoggerFactory.getLogger(DoctorServiceImpl.class);
     private final ClinicService clinicService;
+
+    @Override
+    public Optional<DoctorDTO> getDoctorDTOById(String id) {
+        Optional<DoctorEntity> doctorEntity = doctorRepository.findById(id);
+
+        return Optional.ofNullable(
+                DoctorDTO.toDTO(doctorEntity.orElse(null))
+        );
+    }
 
     @Override
     public ResponseEntity<DoctorResponse> getDoctor(String id) {
@@ -62,15 +75,22 @@ public class DoctorServiceImpl implements DoctorService {
         try {
             List<DoctorEntity> doctors = (List<DoctorEntity>) doctorRepository.findAll();
 
+            SortStrategy<DoctorResponse> strategy = new ConcreteMultiFieldSortStrategy<>(
+                    List.of(DoctorResponse::getFirstName, DoctorResponse::getLastName),
+                    false
+            );
+
             return ResponseEntity.ok()
                     .body(
                             DoctorsResponse.builder()
+                                    .strategy(strategy)
                                     .doctors(
                                             doctors.stream()
                                                     .map(DoctorResponse::toResponse)
-                                                    .toList()
+                                                    .collect(Collectors.toList())
                                     )
                                     .build()
+                                    .sortDoctors()
                     );
         } catch (Exception e) {
             logger.error(e.getMessage());
