@@ -50,9 +50,7 @@ public class AuthServiceImpl implements AuthService {
                     )
             );
 
-            UserDTO user = userService.getUserByUsername(
-                    userLoginRequest.getUsername()
-            ).orElseThrow(
+            UserDTO user = userDTO.orElseThrow(
                     () -> new UserNotFound("Пользователь не был найден!")
             );
 
