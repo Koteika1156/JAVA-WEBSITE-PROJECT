@@ -1,0 +1,176 @@
+div.content {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  flex: 1 0 auto;
+}
+
+div.loginBlock {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 400px;
+}
+
+div.loginData {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+div.loginField {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+#userContainer {
+	padding-top: 10%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: row;
+	height: 200px;
+}
+
+#userProfile {
+	display: flex;
+	height: 200px;
+	width: 300px;
+	flex-direction: column;
+	justify-content: space-around;
+}
+
+#userPhotoBlock {
+	display: flex;
+	height: 200px;
+	width: 300px;
+	justify-content: center;
+	align-items: center;
+}
+
+#userInfoBlock {
+	padding-top: 10px;
+	padding-left: 10px;
+}
+
+
+#userPhoto {
+	height: 80%;
+}
+
+#recordsModal {
+	position: fixed;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+}
+
+.modal-content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+}
+
+#recordsList {
+	background-color: white;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	width: 100%;
+	max-width: 1000px;
+}
+
+#userButton {
+	cursor: pointer;
+	padding: 10px 20px;
+	margin-top: 20px;
+	border: none;
+	background-color: #f44336;
+	color: white;
+	border-radius: 5px;
+}
+
+#userTable {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+#userTableBody {
+	text-align-last: center;
+}
+
+.text_block {
+	display: flex;
+	border-top: 3px solid black;
+	border-bottom: 3px solid black;
+	height: auto;
+	background-color: #EDEDED;
+	padding-left: 12%;
+	padding-right: 12%;
+	padding-top: 28px;
+	padding-bottom: 28px;
+	justify-content: space-between;
+}
+
+.text {
+	width: 80%;
+	font-size: 20px;
+}
+
+#userTable tbody tr {
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+}
+
+#newRecordModal {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#newRecordForm {
+	background: white;
+	padding: 20px;
+	border-radius: 5px;
+}
+
+#userButton2 {
+	cursor: pointer;
+	padding: 10px 20px;
+	margin-top: 20px;
+	border: none;
+	background-color: #f44336;
+	color: white;
+	border-radius: 5px;
+	margin-bottom: 2%;
+}
+
+#recordForm {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+div.registrationData {
+	display: flex;
+	flex-direction: column;
+	height: 300px;
+	align-content: center;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 15%;
+}

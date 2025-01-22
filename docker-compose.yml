@@ -1,0 +1,54 @@
+networks:
+  network:
+    driver: bridge
+
+volumes:
+  postgres_data_volume:
+  data_pgadmin_volume:
+  rabbitmq_data:
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: ${DB_CONT_NAME}
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_PORT: ${DB_MAPPING_PORT}
+    networks:
+      - network
+    volumes:
+      - postgres_data_volume:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT}:${DB_MAPPING_PORT}"
+    env_file: ".env"
+    restart: always
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: ${PG_CONT_NAME}
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD}
+      PGADMIN_LISTEN_PORT: ${PG_PORT}
+    networks:
+      - network
+    volumes:
+      - data_pgadmin_volume:/var/lib/pgadmin
+    env_file: ".env"
+    ports:
+      - "${PG_PORT}:${PG_PORT}"
+
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    container_name: ${RABBIT_CONT_NAME}
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBIT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBIT_PASSWORD}
+    ports:
+      - "${RABBIT_1_PORT}:${RABBIT_1_PORT}"
+      - "${RABBIT_2_PORT}:${RABBIT_2_PORT}"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq

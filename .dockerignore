@@ -1,0 +1,7 @@
+JAVA-WEBSITE-PROJECT/.gradle
+JAVA-WEBSITE-PROJECT/.idea
+JAVA-WEBSITE-PROJECT/build
+
+auth-service/.gradle
+auth-service/.idea
+auth-service/build
