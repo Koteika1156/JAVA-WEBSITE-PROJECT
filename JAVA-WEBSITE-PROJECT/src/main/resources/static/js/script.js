@@ -1,88 +1,4 @@
 document.addEventListener('DOMContentLoaded', async function() {
-    var loginButton = document.getElementById('loginButton');
-
-    if (loginButton) {
-        loginButton.addEventListener('click', async function() {
-            var formData = {
-                username: document.getElementById('username').value,
-                password: document.getElementById('password').value,
-            };
-
-            try {
-                const response = await fetch('/auth/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok.');
-                }
-
-                const data = await response.json();
-
-                if (data.result === true && data.accessToken) {
-                    localStorage.setItem('userId', data.userId)
-                    localStorage.setItem('accessToken', data.accessToken);
-                    localStorage.setItem('refreshToken', data.refreshToken);
-                    console.log('Login successful');
-                    window.location.href = '/profile';
-                } else {
-                    console.error('Login failed');
-                }
-            } catch (error) {
-                console.error('Error during login process:', error);
-            }
-        });
-    }
-});
-
-document.addEventListener('DOMContentLoaded', async function() {
-    var registerButton = document.getElementById('registerButton');
-    registerButton.addEventListener('click', async function(e) {
-        e.preventDefault();
-
-        var userData = {
-            firstName: document.getElementById('firstName').value,
-            lastName: document.getElementById('lastName').value,
-            number: document.getElementById('phoneNumber').value,
-            username: document.getElementById('username').value,
-            password: document.getElementById('password').value,
-            confirmPassword: document.getElementById('confirmPassword').value,
-            role: document.getElementById('role').value
-        };
-
-        if (userData.password !== userData.confirmPassword) {
-            alert('Пароли не совпадают!');
-            return;
-        }
-
-        try {
-            const response = await fetch('auth/registration', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(userData)
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                alert('Регистрация выполнена!');
-                window.location.href = '/login';
-            } else {
-                alert('Ошибка регистрации: ' + data.message);
-            }
-        } catch (error) {
-            console.error('Ошибка при отправке данных:', error);
-        }
-    });
-});
-
-document.addEventListener('DOMContentLoaded', async function() {
     const userProfileDiv = document.getElementById('userContainer');
     const accessToken = localStorage.getItem('accessToken');
 
@@ -240,7 +156,7 @@ async function showRecordsModal() {
 
                         try {
                             const response = await fetch('/api/v1/record/update', {
-                                method: 'POST',
+                                method: 'PUT',
                                 headers: {
                                     'Authorization': 'Bearer ' + accessToken,
                                     'Content-Type': 'application/json'
@@ -286,7 +202,7 @@ async function showRecordsModal() {
 
                     try {
                         const response = await fetch(`/api/v1/record/delete?recordId=${encodeURIComponent(recordId)}`, {
-                            method: 'POST',
+                            method: 'DELETE',
                             headers: {
                                 'Authorization': 'Bearer ' + accessToken
                             }

@@ -12,5 +12,8 @@ import java.util.Optional;
 public interface ScheduleRepository extends CrudRepository<ScheduleEntity, String> {
     Optional<ScheduleEntity> findByStartTimeAndDoctorId(LocalDateTime startTime, String doctorId);
     boolean existsByDoctorIdAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(String doctorId, LocalDateTime endTime, LocalDateTime startTime);
+    boolean existsByDoctorIdAndStartTimeLessThanEqualAndEndTimeGreaterThanEqualAndIdNot(String doctorId, LocalDateTime endTime, LocalDateTime startTime, String Id);
     boolean existsByDoctorIdAndEndTimeGreaterThanAndStartTimeLessThan(String doctorId, LocalDateTime newStartTime, LocalDateTime newEndTime);
+    boolean existsByDoctorIdAndEndTimeGreaterThanAndStartTimeLessThanAndIdNot(String doctorId, LocalDateTime newStartTime, LocalDateTime newEndTime, String Id);
+
 }

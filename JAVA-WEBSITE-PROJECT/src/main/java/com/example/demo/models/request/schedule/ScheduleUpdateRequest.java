@@ -16,11 +16,13 @@ public class ScheduleUpdateRequest implements Prototype<ScheduleUpdateRequest> {
     private String id;
     private LocalDateTime newStartTime;
     private LocalDateTime newEndTime;
+    private String RecordId;
 
     public ScheduleUpdateRequest(ScheduleUpdateRequest scheduleUpdateRequest) {
         this.id = scheduleUpdateRequest.getId();
         this.newStartTime = scheduleUpdateRequest.getNewStartTime();
         this.newEndTime = scheduleUpdateRequest.getNewEndTime();
+        this.RecordId = scheduleUpdateRequest.getRecordId();
     }
 
 

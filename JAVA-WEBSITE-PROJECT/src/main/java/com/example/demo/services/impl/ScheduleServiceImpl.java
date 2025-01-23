@@ -138,8 +138,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                 throw new DifferentDatesException("Временной промежуток задевает разные даты");
             }
 
-            if (scheduleRepository.existsByDoctorIdAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(schedule.getDoctor().getId(), recordUpdateRequest.getNewStartTime(), recordUpdateRequest.getNewEndTime())
-                    || scheduleRepository.existsByDoctorIdAndEndTimeGreaterThanAndStartTimeLessThan(schedule.getDoctor().getId(), recordUpdateRequest.getNewStartTime(), recordUpdateRequest.getNewEndTime())) {
+            if (scheduleRepository.existsByDoctorIdAndStartTimeLessThanEqualAndEndTimeGreaterThanEqualAndIdNot(schedule.getDoctor().getId(), recordUpdateRequest.getNewStartTime(), recordUpdateRequest.getNewEndTime(), recordUpdateRequest.getRecordId())
+                    || scheduleRepository.existsByDoctorIdAndEndTimeGreaterThanAndStartTimeLessThanAndIdNot(schedule.getDoctor().getId(), recordUpdateRequest.getNewStartTime(), recordUpdateRequest.getNewEndTime(), recordUpdateRequest.getRecordId())) {
                 throw new CrossingTimeException("Время пересекается с другой записью!");
             }
 
